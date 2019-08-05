@@ -4,6 +4,8 @@ import 'package:flutter_trip/dao/home_dao.dart';
 import 'dart:convert';
 
 import 'package:flutter_trip/model/home_model.dart';
+import 'package:flutter_trip/model/local_nav_model.dart';
+import 'package:flutter_trip/widget/local_nav.dart';
 
 const BAR_SCROLL_OFFSET = 100; //appbar滚动的最大距离
 class HomePage extends StatefulWidget {
@@ -12,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  List<LocalNavModel> localNavList;
   double appBarAlpha = 0;
   List imagesUrl = [
     'http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg',
@@ -37,12 +39,12 @@ class _HomePageState extends State<HomePage> {
     try {
       HomeModel homeModel = await HomeDao.fetch();
       setState(() {
-        resultString = json.encode(homeModel.config);
+        localNavList = homeModel.localNavList;
+        print("qqqq$localNavList");
       });
-      print("9999$resultString");
     } catch (e, s) {
       setState(() {
-          resultString = e.toString()+s.toString();
+         print(e);
       });
     }
   }
@@ -86,6 +88,8 @@ class _HomePageState extends State<HomePage> {
                           pagination: SwiperPagination(),
                         ),
                       ),
+                      Padding(padding: EdgeInsets.fromLTRB(7, 4, 7, 4),
+                      child:  LocalNav(localNavList:localNavList)),
                       Container(
                         child: ListTile(
                           title: Text(resultString),
